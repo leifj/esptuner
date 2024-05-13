@@ -127,6 +127,17 @@ void setup() {
   pinMode(TUNED_PIN, INPUT);
 }
 
+unsigned int previousMillis = 0;
+unsigned const int interval = 30*1000;
 void loop() {
-
+  unsigned long currentMillis = millis();
+  // if WiFi is down, try reconnecting
+  if ((WiFi.status() != WL_CONNECTED) && (currentMillis - previousMillis >= interval)) {
+    Serial.print(millis());
+    Serial.println("Reconnecting to WiFi...");
+    WiFi.disconnect();
+    WiFi.reconnect();
+    previousMillis = currentMillis;
+  }
+  delay(1000);
 }
